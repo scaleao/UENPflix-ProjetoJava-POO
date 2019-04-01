@@ -1,0 +1,382 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package telas;
+
+import banco.ClienteController;
+import banco.FuncionarioController;
+import java.awt.Color;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import static telas.TelaCliente.listaHistorico;
+import static telas.TelaLogin.listaUsuario;
+import usuario.Usuario;
+import usuario.cliente.Cliente;
+import usuario.cliente.HistoricoCliente;
+
+/**
+ *
+ * @author jscal
+ */
+public class TelaFuncionario_TelaMenu_GerenciarHistorico extends javax.swing.JFrame {
+    String colunas[] = {"Horario, Acao, Filme"};
+    private int rowDelete;
+    private String codFuncSelecionado;
+    private Cliente clienteAnalisado = null;
+    private FuncionarioController fc = new FuncionarioController();
+    private ClienteController cc = new ClienteController();
+    /**
+     * Creates new form TelaFuncionario_TelaMenu_GerenciarHistorico
+     */
+    public TelaFuncionario_TelaMenu_GerenciarHistorico() {
+        initComponents();
+        try {
+            listaUsuario = fc.listarTodos();
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        btSelecionar.setEnabled(false);
+        btHabilitar.setEnabled(false);
+    }
+    
+    public void criarTabela(){
+    DefaultTableModel modelo = new DefaultTableModel();
+
+    modelo.addColumn("Nome");
+    modelo.addColumn("Login");
+    
+        for (Usuario a : listaUsuario){
+            if(a.getCliente()!=false){
+                modelo.addRow(new Object[]{
+                    a.getNome(), a.getLogin()
+                });
+            }
+        }
+    
+        this.tabelaHistorico.setModel(modelo);
+        this.tabelaHistorico.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+        int linha = tabelaHistorico.getSelectedRow();
+                if (linha != -1) {
+                    rowDelete = linha;
+                    codFuncSelecionado
+                            = (String) tabelaHistorico.getValueAt(linha, 1);
+                    /*   A variavel codFuncSelecionado armazenao 
+                     * o conteudo referente a coluna determina, 
+                     * no caso a coluna determina é a 0, que é
+                     * a coluna referente aos NOME do Usuario Cliente
+                     */
+                    btSelecionar.setEnabled(true);
+                    btHabilitar.setEnabled(true);
+                } else {
+                    btSelecionar.setEnabled(false);
+                    btHabilitar.setEnabled(false);
+                }
+        }    
+        });
+    }
+    
+    public void criarHistorico(){
+    DefaultTableModel modelo = new DefaultTableModel();
+
+    modelo.addColumn("Horario");
+    modelo.addColumn("Acao");
+    modelo.addColumn("Filme");
+    
+    
+        try {
+            this.clienteAnalisado.setHistorico(this.cc.listarHist(codFuncSelecionado));
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    for (HistoricoCliente a : clienteAnalisado.getHistorico()){
+            modelo.addRow(new Object[]{
+                a.getHorario(), a.getMovimentacao(), a.getFilmeAssistidos()
+            });
+        }
+       
+    
+       this.tabelaHistorico2.setModel(modelo);
+        this.tabelaHistorico2.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+        int linha = tabelaHistorico2.getSelectedRow();
+                if (linha != -1) {
+                    rowDelete = linha;
+                    codFuncSelecionado
+                            = (String) tabelaHistorico2.getValueAt(linha, 1);
+                    /*   A variavel codFuncSelecionado armazenao 
+                     * o conteudo referente a coluna determina, 
+                     * no caso a coluna determina é a 0, que é
+                     * a coluna referente aos NOME do Usuario Cliente
+                     */
+                    //btExcluir.setEnabled(true);
+                    //btEditar.setEnabled(true);
+                } else {
+                    //btExcluir.setEnabled(false);
+                   // btEditar.setEnabled(false);
+                }
+        }    
+        });
+    }
+    
+    
+    
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        labelUENPflix = new javax.swing.JLabel();
+        labelGerenciadorHistorico = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelaHistorico = new javax.swing.JTable();
+        btSelecionar = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabelaHistorico2 = new javax.swing.JTable();
+        btHabilitar = new javax.swing.JButton();
+        btVoltar = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+                formWindowGainedFocus(evt);
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+            }
+        });
+
+        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+
+        labelUENPflix.setFont(new java.awt.Font("Calibri", 1, 48)); // NOI18N
+        labelUENPflix.setForeground(new java.awt.Color(255, 0, 0));
+        labelUENPflix.setText("UENPflix");
+
+        labelGerenciadorHistorico.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        labelGerenciadorHistorico.setForeground(new java.awt.Color(255, 0, 0));
+        labelGerenciadorHistorico.setText("Gerenciador de Historico");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelGerenciadorHistorico, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(357, 357, 357))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelUENPflix)
+                        .addGap(368, 368, 368))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(labelUENPflix)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(labelGerenciadorHistorico)
+                .addGap(0, 15, Short.MAX_VALUE))
+        );
+
+        tabelaHistorico.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(tabelaHistorico);
+
+        btSelecionar.setText("Selecionar");
+        btSelecionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSelecionarActionPerformed(evt);
+            }
+        });
+
+        tabelaHistorico2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(tabelaHistorico2);
+
+        btHabilitar.setText("Habilitar");
+        btHabilitar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btHabilitarActionPerformed(evt);
+            }
+        });
+
+        btVoltar.setText("Voltar");
+        btVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btVoltarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btSelecionar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btHabilitar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btVoltar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btSelecionar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btHabilitar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btVoltar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowGainedFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowGainedFocus
+        // TODO add your handling code here:
+        this.getContentPane().setBackground(Color.white);
+        criarTabela();
+    }//GEN-LAST:event_formWindowGainedFocus
+
+    private void btSelecionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSelecionarActionPerformed
+        try {
+            this.clienteAnalisado = cc.getClient(codFuncSelecionado);
+            criarHistorico();
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*
+        for (int i = 0; i<listaUsuario.size(); i++){
+            //Login a = this.listaUsuario.get(i);
+            Usuario a = listaUsuario.get(i);
+            if(codFuncSelecionado.equalsIgnoreCase(a.getNome())){
+                this.clienteAnalisado = (Cliente)a;
+            }
+        }
+        */
+        //criarHistorico();
+    }//GEN-LAST:event_btSelecionarActionPerformed
+
+    private void btHabilitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btHabilitarActionPerformed
+                   /*
+            Cliente clienteHab = null;
+            boolean confirma = false;
+            for (int i = 0; i<listaUsuario.size(); i++){
+            //Login a = this.listaUsuario.get(i);
+            Usuario a = listaUsuario.get(i);
+            if(codFuncSelecionado.equalsIgnoreCase(a.getNome())){
+            Cliente cliente = (Cliente) a;
+            cliente.setHabilitarHistorico(true);
+            clienteHab = cliente;
+            confirma = true;
+            }
+            
+            }*/
+        try {
+            cc.ativarHist(codFuncSelecionado);
+            JOptionPane.showMessageDialog(this, "Cliente: "+ codFuncSelecionado + " habilitado!");
+        } catch (SQLException ex) {
+            Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btHabilitarActionPerformed
+
+    private void btVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btVoltarActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+    }//GEN-LAST:event_btVoltarActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(TelaFuncionario_TelaMenu_GerenciarHistorico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new TelaFuncionario_TelaMenu_GerenciarHistorico().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btHabilitar;
+    private javax.swing.JButton btSelecionar;
+    private javax.swing.JButton btVoltar;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelGerenciadorHistorico;
+    private javax.swing.JLabel labelUENPflix;
+    private javax.swing.JTable tabelaHistorico;
+    private javax.swing.JTable tabelaHistorico2;
+    // End of variables declaration//GEN-END:variables
+}
